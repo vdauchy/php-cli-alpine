@@ -1,3 +1,5 @@
+#!/bin/bash
+
 BASE_VERSION="${BASE_VERSION}"
 
 curl \
