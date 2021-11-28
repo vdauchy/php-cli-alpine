@@ -10,9 +10,9 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN install-php-extensions \
-        sockets \
         ast \
         bcmath \
+        blackfire \
         csv \
         exif \
         gd \
@@ -21,9 +21,9 @@ RUN install-php-extensions \
         intl \
         opcache \
         pcntl \
-        pcov \
         pdo_mysql \
         redis \
+        sockets \
         sodium \
         zip
 
@@ -31,6 +31,8 @@ RUN apk add --no-cache \
         bash \
         git \
         openssh-client
+
+RUN curl -A "Docker" -L https://blackfire.io/api/v1/releases/cli/linux/$(uname -m) | tar zxp -C /usr/bin blackfire
 
 RUN ssh-keyscan github.com >> /etc/ssh/ssh_known_hosts && \
     ssh-keyscan gitlab.com >> /etc/ssh/ssh_known_hosts && \
