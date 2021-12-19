@@ -1,7 +1,8 @@
 ARG version
-ARG arch
 
 FROM php:${version}-cli-alpine
+
+ARG extension=''
 
 ENV PHP_PROJECT_ROOT=/usr/project
 ENV COMPOSER_CACHE_DIR=/tmp
@@ -26,6 +27,8 @@ RUN install-php-extensions \
         sockets \
         sodium \
         zip
+
+RUN install-php-extensions ${extension}
 
 RUN apk add --no-cache \
         bash \

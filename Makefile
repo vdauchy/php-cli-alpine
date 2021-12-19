@@ -3,6 +3,8 @@ cnf ?= config.env
 include $(cnf)
 export $(shell sed 's/=.*//' $(cnf))
 
+
+
 # grep the version from the mix file
 VERSION=$(shell ./version.sh)
 
@@ -21,24 +23,39 @@ help: ## This help.
 # DOCKER TASKS
 build: ## Build the image
 	docker build \
-		--build-arg arch=$(ARCH) \
+		--build-arg extension= \
 		--build-arg version=$(VERSION) \
 		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_MINOR) \
 		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_PATCH) \
+		.
+	docker build \
+		--build-arg extension=pcov \
+		--build-arg version=$(VERSION) \
+		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_MINOR)-pcov \
+		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_PATCH)-pcov \
 		.
 
 build-nc: ## Build the image without caching
 	docker build \
 		--no-cache \
-		--build-arg arch=$(ARCH) \
+		--build-arg extension= \
 		--build-arg version=$(VERSION) \
 		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_MINOR) \
 		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_PATCH) \
 		.
+		docker build \
+    		--no-cache \
+    		--build-arg extension=pcov \
+    		--build-arg version=$(VERSION) \
+    		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_MINOR)-pcov \
+    		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_PATCH)-pcov \
+    		.
 
 push: ## Push the images
 	docker push $(DOCKER_REPO)/$(APP_NAME):$(VERSION_MINOR)
 	docker push $(DOCKER_REPO)/$(APP_NAME):$(VERSION_PATCH)
+	docker push $(DOCKER_REPO)/$(APP_NAME):$(VERSION_MINOR)-pcov
+	docker push $(DOCKER_REPO)/$(APP_NAME):$(VERSION_PATCH)-pcov
 
 version: ## Output the current version
 	@echo $(VERSION)
