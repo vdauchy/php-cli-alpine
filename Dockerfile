@@ -26,6 +26,7 @@ RUN install-php-extensions \
         redis \
         sockets \
         sodium \
+        sysvshm \
         zip
 
 RUN install-php-extensions ${extension}
