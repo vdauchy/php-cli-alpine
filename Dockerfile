@@ -7,10 +7,11 @@ ARG extension=''
 ENV PHP_PROJECT_ROOT=/usr/project
 ENV COMPOSER_CACHE_DIR=/tmp
 
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN install-php-extensions \
+    @composer \
+    apcu \
     ast \
     bcmath \
     blackfire \
