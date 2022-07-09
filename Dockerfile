@@ -23,6 +23,7 @@ RUN install-php-extensions \
     opcache \
     pcntl \
     pdo_mysql \
+    posix \
     redis \
     sockets \
     sodium \
