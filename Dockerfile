@@ -11,30 +11,32 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN install-php-extensions \
-        ast \
-        bcmath \
-        blackfire \
-        csv \
-        exif \
-        gd \
-        gettext \
-        imagick \
-        intl \
-        opcache \
-        pcntl \
-        pdo_mysql \
-        redis \
-        sockets \
-        sodium \
-        sysvshm \
-        zip
+    ast \
+    bcmath \
+    blackfire \
+    csv \
+    exif \
+    gd \
+    gettext \
+    imagick \
+    intl \
+    opcache \
+    pcntl \
+    pdo_mysql \
+    redis \
+    sockets \
+    sodium \
+    sysvmsg \
+    sysvsem \
+    sysvshm \
+    zip
 
 RUN install-php-extensions ${extension}
 
 RUN apk add --no-cache \
-        bash \
-        git \
-        openssh-client
+    bash \
+    git \
+    openssh-client
 
 RUN curl -A "Docker" -L https://blackfire.io/api/v1/releases/cli/linux/$(uname -m) | tar zxp -C /usr/bin blackfire
 
