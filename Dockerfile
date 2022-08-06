@@ -23,6 +23,7 @@ RUN install-php-extensions \
     intl \
     opcache \
     pcntl \
+    pcov \
     pdo_mysql \
     posix \
     redis \
