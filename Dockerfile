@@ -25,6 +25,7 @@ RUN install-php-extensions \
     pcntl \
     pcov \
     pdo_mysql \
+    pdo_pgsql \
     posix \
     redis \
     sockets \
