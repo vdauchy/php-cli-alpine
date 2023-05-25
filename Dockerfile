@@ -19,6 +19,7 @@ RUN install-php-extensions \
     exif \
     gd \
     gettext \
+    gmp \
     imagick \
     intl \
     opcache \
