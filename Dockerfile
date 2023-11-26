@@ -14,7 +14,6 @@ RUN install-php-extensions \
     apcu \
     ast \
     bcmath \
-    blackfire \
     csv \
     exif \
     gd \
@@ -41,8 +40,6 @@ RUN apk add --no-cache \
     bash \
     git \
     openssh-client
-
-RUN curl -A "Docker" -L https://blackfire.io/api/v1/releases/cli/linux/$(uname -m) | tar zxp -C /usr/bin blackfire
 
 RUN ssh-keyscan github.com >> /etc/ssh/ssh_known_hosts && \
     ssh-keyscan gitlab.com >> /etc/ssh/ssh_known_hosts && \
