@@ -3,8 +3,6 @@ cnf ?= config.env
 include $(cnf)
 export $(shell sed 's/=.*//' $(cnf))
 
-
-
 # grep the version from the mix file
 VERSION=$(shell ./version.sh)
 
@@ -20,42 +18,39 @@ help: ## This help.
 
 .DEFAULT_GOAL := help
 
+# Function to build docker image
+define docker_build
+	docker build \
+		$(1) \
+		--build-arg extension=$(2) \
+		--build-arg version=$(VERSION) \
+		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_MINOR)$(3) \
+		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_PATCH)$(3) \
+		.
+endef
+memprof
 # DOCKER TASKS
 build: ## Build the image
-	docker build \
-		--build-arg extension= \
-		--build-arg version=$(VERSION) \
-		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_MINOR) \
-		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_PATCH) \
-		.
-	docker build \
-		--build-arg extension=pcov \
-		--build-arg version=$(VERSION) \
-		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_MINOR)-pcov \
-		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_PATCH)-pcov \
-		.
+	$(call docker_build,,,)
+	$(call docker_build,,pcov,-pcov)
+	$(call docker_build,,xdebug,-xdebug)
+	$(call docker_build,,memprof,-memprof)
 
 build-nc: ## Build the image without caching
-	docker build \
-		--no-cache \
-		--build-arg extension= \
-		--build-arg version=$(VERSION) \
-		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_MINOR) \
-		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_PATCH) \
-		.
-		docker build \
-    		--no-cache \
-    		--build-arg extension=pcov \
-    		--build-arg version=$(VERSION) \
-    		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_MINOR)-pcov \
-    		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_PATCH)-pcov \
-    		.
+	$(call docker_build,--no-cache,,)
+	$(call docker_build,--no-cache,pcov,-pcov)
+	$(call docker_build,--no-cache,xdebug,-xdebug)
+	$(call docker_build,--no-cache,memprof,-memprof)
 
 push: ## Push the images
 	docker push $(DOCKER_REPO)/$(APP_NAME):$(VERSION_MINOR)
 	docker push $(DOCKER_REPO)/$(APP_NAME):$(VERSION_PATCH)
 	docker push $(DOCKER_REPO)/$(APP_NAME):$(VERSION_MINOR)-pcov
 	docker push $(DOCKER_REPO)/$(APP_NAME):$(VERSION_PATCH)-pcov
+	docker push $(DOCKER_REPO)/$(APP_NAME):$(VERSION_MINOR)-xdebug
+	docker push $(DOCKER_REPO)/$(APP_NAME):$(VERSION_PATCH)-xdebug
+	docker push $(DOCKER_REPO)/$(APP_NAME):$(VERSION_MINOR)-memprof
+	docker push $(DOCKER_REPO)/$(APP_NAME):$(VERSION_PATCH)-memprof
 
 version: ## Output the current version
 	@echo $(VERSION)
