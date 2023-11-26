@@ -28,7 +28,7 @@ define docker_build
 		-t $(DOCKER_REPO)/$(APP_NAME):$(VERSION_PATCH)$(3) \
 		.
 endef
-memprof
+
 # DOCKER TASKS
 build: ## Build the image
 	$(call docker_build,,,)
